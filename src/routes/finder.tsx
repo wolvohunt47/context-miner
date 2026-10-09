@@ -4,7 +4,7 @@ import { useState } from "react";
 import { sampleStack } from "@/lib/data";
 
 export const Route = createFileRoute("/finder")({
-  validateSearch: (s: Record<string, unknown>): { q?: string } => ({ q: typeof s["q"] === "string" ? (s["q"] as string) : undefined }),
+  validateSearch: (s: Record<string, unknown>): { q?: string | undefined } => ({ q: typeof s["q"] === "string" ? (s["q"] as string) : undefined }),
   head: () => ({
     meta: [
       { title: "AI Finder — Get your recommended AI stack | BazaarAI.si" },
