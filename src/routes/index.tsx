@@ -87,7 +87,7 @@ function Index() {
         <p className="text-muted-foreground">Find the right AI for your needs</p>
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {categories.map((c) => {
-            const I = (Icons as unknown as Record<string, Icons.LucideIcon>)[c.icon];
+            const I = (Icons as unknown as Record<string, Icons.LucideIcon>)[c.icon] ?? Icons.Sparkles;
             return (
               <Link key={c.name} to="/finder" search={{ q: c.name }} className="flex items-center gap-3 rounded-xl border bg-card p-4 shadow-card hover:border-primary/40">
                 <span className="grid h-10 w-10 place-items-center rounded-lg bg-primary-soft text-primary"><I className="h-5 w-5" /></span>

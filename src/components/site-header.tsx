@@ -7,7 +7,7 @@ const nav = [
   { to: "/news", label: "AI News" },
   { to: "/compare", label: "AI Models" },
   { to: "/finder", label: "AI Finder" },
-  { to: "/tools/chatgpt", label: "Tools" },
+
 ] as const;
 
 export function Logo() {
