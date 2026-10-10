@@ -15,13 +15,13 @@ export function SiteFooter() {
             <li><Link to="/finder">AI Finder</Link></li>
             <li><Link to="/compare">Compare Models</Link></li>
             <li><Link to="/news">AI News</Link></li>
-            <li><Link to="/tools/$slug" params={{ slug: "chatgpt" }}>Tools</Link></li>
+            <li><Link to="/tools">Tools</Link></li><li><Link to="/categories">Categories</Link></li><li><Link to="/learn">Learn</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="font-semibold">Trust</h4>
           <ul className="mt-3 space-y-2 text-sm text-night-muted">
-            <li>Methodology</li><li>Editorial Policy</li><li>Affiliate Disclosure</li><li>Privacy · Terms</li>
+            <li><Link to="/methodology">Methodology</Link></li><li><Link to="/editorial-policy">Editorial Policy</Link></li><li><Link to="/affiliate-disclosure">Affiliate Disclosure</Link></li><li><Link to="/privacy">Privacy</Link> · <Link to="/terms">Terms</Link></li><li><Link to="/about">About</Link></li>
           </ul>
         </div>
         <div>
