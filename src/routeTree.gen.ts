@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AffiliateDisclosureRouteImport } from './routes/affiliate-disclosure'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as EditorialPolicyRouteImport } from './routes/editorial-policy'
@@ -21,12 +23,17 @@ import { Route as MethodologyRouteImport } from './routes/methodology'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AuthenticatedSavedRouteImport } from './routes/_authenticated/saved'
 import { Route as ToolsIndexRouteImport } from './routes/tools.index'
 import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -37,6 +44,11 @@ const AboutRoute = AboutRouteImport.update({
 const AffiliateDisclosureRoute = AffiliateDisclosureRouteImport.update({
   id: '/affiliate-disclosure',
   path: '/affiliate-disclosure',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriesRoute = CategoriesRouteImport.update({
@@ -84,6 +96,11 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSavedRoute = AuthenticatedSavedRouteImport.update({
+  id: '/saved',
+  path: '/saved',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ToolsIndexRoute = ToolsIndexRouteImport.update({
   id: '/tools/',
   path: '/tools/',
@@ -99,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/affiliate-disclosure': typeof AffiliateDisclosureRoute
+  '/auth': typeof AuthRoute
   '/categories': typeof CategoriesRoute
   '/compare': typeof CompareRoute
   '/editorial-policy': typeof EditorialPolicyRoute
@@ -108,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/news': typeof NewsRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/saved': typeof AuthenticatedSavedRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/tools/': typeof ToolsIndexRoute
 }
@@ -115,6 +134,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/affiliate-disclosure': typeof AffiliateDisclosureRoute
+  '/auth': typeof AuthRoute
   '/categories': typeof CategoriesRoute
   '/compare': typeof CompareRoute
   '/editorial-policy': typeof EditorialPolicyRoute
@@ -124,14 +144,17 @@ export interface FileRoutesByTo {
   '/news': typeof NewsRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/saved': typeof AuthenticatedSavedRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/tools': typeof ToolsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/affiliate-disclosure': typeof AffiliateDisclosureRoute
+  '/auth': typeof AuthRoute
   '/categories': typeof CategoriesRoute
   '/compare': typeof CompareRoute
   '/editorial-policy': typeof EditorialPolicyRoute
@@ -141,6 +164,7 @@ export interface FileRoutesById {
   '/news': typeof NewsRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/saved': typeof AuthenticatedSavedRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/tools/': typeof ToolsIndexRoute
 }
@@ -150,6 +174,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/affiliate-disclosure'
+    | '/auth'
     | '/categories'
     | '/compare'
     | '/editorial-policy'
@@ -159,6 +184,7 @@ export interface FileRouteTypes {
     | '/news'
     | '/privacy'
     | '/terms'
+    | '/saved'
     | '/tools/$slug'
     | '/tools/'
   fileRoutesByTo: FileRoutesByTo
@@ -166,6 +192,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/affiliate-disclosure'
+    | '/auth'
     | '/categories'
     | '/compare'
     | '/editorial-policy'
@@ -175,13 +202,16 @@ export interface FileRouteTypes {
     | '/news'
     | '/privacy'
     | '/terms'
+    | '/saved'
     | '/tools/$slug'
     | '/tools'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/about'
     | '/affiliate-disclosure'
+    | '/auth'
     | '/categories'
     | '/compare'
     | '/editorial-policy'
@@ -191,14 +221,17 @@ export interface FileRouteTypes {
     | '/news'
     | '/privacy'
     | '/terms'
+    | '/_authenticated/saved'
     | '/tools/$slug'
     | '/tools/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AffiliateDisclosureRoute: typeof AffiliateDisclosureRoute
+  AuthRoute: typeof AuthRoute
   CategoriesRoute: typeof CategoriesRoute
   CompareRoute: typeof CompareRoute
   EditorialPolicyRoute: typeof EditorialPolicyRoute
@@ -221,6 +254,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -233,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/affiliate-disclosure'
       fullPath: '/affiliate-disclosure'
       preLoaderRoute: typeof AffiliateDisclosureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/categories': {
@@ -298,6 +345,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/saved': {
+      id: '/_authenticated/saved'
+      path: '/saved'
+      fullPath: '/saved'
+      preLoaderRoute: typeof AuthenticatedSavedRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/tools/': {
       id: '/tools/'
       path: '/tools'
@@ -315,10 +369,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedSavedRoute: typeof AuthenticatedSavedRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedSavedRoute: AuthenticatedSavedRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AffiliateDisclosureRoute: AffiliateDisclosureRoute,
+  AuthRoute: AuthRoute,
   CategoriesRoute: CategoriesRoute,
   CompareRoute: CompareRoute,
   EditorialPolicyRoute: EditorialPolicyRoute,

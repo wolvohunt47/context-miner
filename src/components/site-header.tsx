@@ -1,6 +1,8 @@
-import { Link } from "@tanstack/react-router";
-import { Menu, Search, ShoppingCart, X } from "lucide-react";
-import { useState } from "react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Bookmark, LogOut, Menu, Search, ShoppingCart, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { User } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -28,6 +30,44 @@ export function Logo() {
   );
 }
 
+function useUser() {
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setUser(session?.user ?? null));
+    return () => subscription.unsubscribe();
+  }, []);
+  return user;
+}
+
+function AuthButtons({ mobile }: { mobile?: boolean }) {
+  const user = useUser();
+  const navigate = useNavigate();
+  const base = mobile ? "w-full rounded-lg py-3" : "rounded-lg px-4 py-2 text-sm";
+
+  if (user) {
+    return (
+      <>
+        <Link to="/saved" className={`${base} flex items-center justify-center gap-2 border border-night-border`}>
+          <Bookmark className="h-4 w-4" /> Saved
+        </Link>
+        <button
+          onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/" }); }}
+          className={`${base} flex items-center justify-center gap-2 bg-primary font-semibold text-primary-foreground shadow-glow`}
+        >
+          <LogOut className="h-4 w-4" /> Logout
+        </button>
+      </>
+    );
+  }
+  return (
+    <>
+      <Link to="/auth" className={`${base} border border-night-border text-center`}>Login</Link>
+      <Link to="/auth" className={`${base} bg-primary text-center font-semibold text-primary-foreground shadow-glow`}>Sign Up</Link>
+    </>
+  );
+}
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
@@ -45,8 +85,7 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-2">
           <Link to="/finder" aria-label="Search" className="rounded-md p-2 text-night-muted hover:text-night-foreground"><Search className="h-5 w-5" /></Link>
-          <button className="hidden rounded-lg border border-night-border px-4 py-2 text-sm sm:block">Login</button>
-          <button className="hidden rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow sm:block">Sign Up</button>
+          <div className="hidden items-center gap-2 sm:flex"><AuthButtons /></div>
           <button className="rounded-md p-2 xl:hidden" aria-label="Open menu" onClick={() => setOpen(true)}><Menu className="h-6 w-6" /></button>
         </div>
       </div>
@@ -58,9 +97,8 @@ export function SiteHeader() {
               <Link key={n.label} to={n.to} onClick={() => setOpen(false)} className="rounded-lg px-3 py-3 text-lg hover:bg-night-2">{n.label}</Link>
             ))}
           </nav>
-          <div className="mt-8 grid gap-3">
-            <button className="rounded-lg border border-night-border py-3">Login</button>
-            <button className="rounded-lg bg-primary py-3 font-semibold text-primary-foreground">Sign Up</button>
+          <div className="mt-8 grid gap-3" onClick={() => setOpen(false)}>
+            <AuthButtons mobile />
           </div>
         </div>
       )}
